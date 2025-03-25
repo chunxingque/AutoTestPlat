@@ -1,0 +1,57 @@
+[
+    {
+        "name": "定时任务",
+        "icon": "iconfont icon-caijian",
+        "sort": 6,
+        "is_link": false,
+        "is_catalog": true,
+        "web_path": "/celeryManage",
+        "component": "",
+        "component_name": "",
+        "status": true,
+        "cache": true,
+        "visible": true,
+        "parent": null,
+        "children": [
+            {
+                "name": "调度模型",
+                "icon": "iconfont icon-tongzhi4",
+                "sort": 1,
+                "is_link": false,
+                "is_catalog": false,
+                "web_path": "/scheduleManage",
+                "component": "plugins/dvadmin3-celery-web/src/scheduleManage/index",
+                "component_name": "scheduleManage",
+                "status": true,
+                "cache": true,
+                "visible": true,
+                "parent": 18,
+                "children": [],
+                "menu_button": [],
+                "menu_field": [],
+                "dept_belong_id": 1
+            },
+            {
+                "name": "任务管理",
+                "icon": "iconfont icon-caijian",
+                "sort": 2,
+                "is_link": false,
+                "is_catalog": false,
+                "web_path": "/taskManage",
+                "component": "plugins/dvadmin3-celery-web/src/taskManage/index",
+                "component_name": "taskManage",
+                "status": true,
+                "cache": true,
+                "visible": true,
+                "parent": 18,
+                "children": [],
+                "menu_button": [],
+                "menu_field": [],
+                "dept_belong_id": 1
+            }
+        ],
+        "menu_button": [],
+        "menu_field": [],
+        "dept_belong_id": 1
+    }
+]
