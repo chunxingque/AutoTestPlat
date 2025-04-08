@@ -4,8 +4,9 @@ import { defineStore } from 'pinia';
 export const useWebAutoTest = defineStore('webAutoTest', {
 	state: () => ({
         runCaseParam: {
+            auto_tool: "selenium",
             browser: 'chrome',
-            incognito: false,
+            incognito: true,
             headless: false,
             window_size: "",
             grid_url: "",

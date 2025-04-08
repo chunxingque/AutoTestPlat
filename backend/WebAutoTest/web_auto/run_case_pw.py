@@ -1,14 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from playwright.sync_api import TimeoutError
 
 from DatabaseApi import AutoDatabase
-from SeleniumApi import SeleniumApi
+from PlaywrightApi import PlaywrightApi, NoSuchElementException
 
-
-
-def start_case(case_id: int, browser: str="chrome",incognito: bool=False,headless=False,window_size: str= None, grid_url: str = None,run_step: int = 0, *args, **kwargs):
+def start_case(case_id: int, browser: str="chrome",headless=False,window_size: str= None, grid_url: str = None,run_step: int = 0,*args, **kwargs):
     # 默认用例执行结果为1成功
     case_result = 1
     run_log = ''
@@ -21,7 +18,7 @@ def start_case(case_id: int, browser: str="chrome",incognito: bool=False,headles
     
     auto_sql.init_step_result(case_id)
     
-    with SeleniumApi(browser=browser,incognito=incognito,headless=headless,window_size=window_size,grid_url=grid_url) as api:
+    with PlaywrightApi(window_size=window_size,browser=browser,headless=headless) as api:
         for step in case_steps:
             try:
                 api.main_action(action=step['action'],
@@ -37,7 +34,7 @@ def start_case(case_id: int, browser: str="chrome",incognito: bool=False,headles
                 
                 print(f'用例步骤ID({step["id"]})运行失败,退出执行！！')
                 break
-            except TimeoutException as e:
+            except TimeoutError as e:
                 run_log = '页面加载超时,请检查页面是否正常！'
                 auto_sql.set_step_result(step['id'],2,run_log)
                 case_result = 2
@@ -56,6 +53,6 @@ def start_case(case_id: int, browser: str="chrome",incognito: bool=False,headles
 
 if __name__ == '__main__':
     print('start case')
-    start_case(1)
+    start_case(case_id=1,window_size='1280x720')
 
 

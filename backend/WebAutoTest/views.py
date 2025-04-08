@@ -14,7 +14,7 @@ from . import serializers
 from . import filters
 from .pagination import customPageNumberPagination
 from dvadmin.utils.viewset import CustomModelViewSet
-from .tasks import task__start_case
+from .tasks import task__start_case_selenium,task__start_case_pw
 
 
 class WebTestCaseModelViewSet(ModelViewSet):
@@ -282,7 +282,11 @@ class RunCaseTask(APIView):
     def post(self,request):
         case_serializer = serializers.RunCaseSerializer(data=request.data)
         case_serializer.is_valid(raise_exception=True)
-        res = task__start_case.delay(**case_serializer.data)
+        auto_tool = request.data.get('auto_tool')
+        if auto_tool == 'playwright':
+            res = task__start_case_pw.delay(**case_serializer.data)
+        else:
+            res = task__start_case_selenium.delay(**case_serializer.data)
         return Response({"code": 2000,"msg":"任务已提交"},status=status.HTTP_200_OK)
          
 

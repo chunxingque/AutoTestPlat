@@ -145,6 +145,14 @@
             >
             <el-row :gutter="20">
                 <el-col :span="12">
+                    <el-form-item label="浏览器自动化工具" prop="driver" label-position="top">
+                        <el-select v-model="webAutoTestStore.runCaseParam.auto_tool" placeholder="浏览器自动化工具" >
+                            <el-option  value="selinium" label="selinium"/> 
+                            <el-option  value="playwright" label="playwright"/> 
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
                     <el-form-item label="浏览器" prop="browser" label-position="top">
                         <el-select v-model="webAutoTestStore.runCaseParam.browser" placeholder="浏览器" >
                             <el-option
@@ -170,9 +178,6 @@
                             </el-select>
                     </el-form-item>
                 </el-col>
-            </el-row>
-
-            <el-row :gutter="20">
                 <el-col :span="12">
                     <el-form-item label="窗口大小" prop="window_size">
                         <el-select v-model="webAutoTestStore.runCaseParam.window_size" placeholder="默认大小" >
@@ -185,7 +190,7 @@
                         </el-select>
                     </el-form-item> 
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="24">
                     <el-form-item label="运行步数" prop="run_step" label-position="top">
                         <el-input-number v-model="webAutoTestStore.runCaseParam.run_step":min="0" style="width: 100%; "/>
                     </el-form-item>

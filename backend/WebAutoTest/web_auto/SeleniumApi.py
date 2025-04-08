@@ -10,7 +10,7 @@ from selenium.webdriver.chrome.options import Options
 
         
 class SeleniumApi():
-    def __init__(self,browser: str="chrome",incognito: bool=False,headless=False,window_size: str= None, grid_url: str = None) -> None:
+    def __init__(self,browser: str="chrome",incognito: bool=True,headless=False,window_size: str= None, grid_url: str = None) -> None:
         """_summary_
 
         Args:
@@ -115,34 +115,29 @@ class SeleniumApi():
                 marker.style.height = '20px';
                 marker.style.backgroundColor = 'red';
                 marker.style.borderRadius = '50%';
+                marker.style.zIndex = '9999'; 
                 document.body.appendChild(marker);
                 // 2 秒后删除标记
                 setTimeout(function() {
-                        marker.remove();
+                    marker.remove();
                 }, 2000);
             """
             
             if find_value:
                 
-                # 获取元素的中心点坐标
                 element = self.find_element(find_method,find_value)
-                size = element.size
-                center_x = element.location['x'] + (size['width'] / 2)
-                center_y = element.location['y'] + (size['height'] / 2)
-                
-                self.driver.execute_script(script, center_x + coordinate_x, center_y + coordinate_y)
-                time.sleep(2)
-                
-                ActionChains(self.driver).move_to_element_with_offset(element, coordinate_x,coordinate_y).click().perform()
-                # ActionChains(self.driver).move_to_element_with_offset(element, coordinate_x,coordinate_y).context_click().pause(3).click().perform()
+                # 左上角偏移点击
+                left_top_x = element.location['x']
+                left_top_y = element.location['y']
+                self.driver.execute_script(script, left_top_x + coordinate_x, left_top_y + coordinate_y)
+                action = ActionBuilder(self.driver)
+                action.pointer_action.move_to_location(left_top_x + coordinate_x, left_top_y + coordinate_y).click()
+                action.perform()
                 
             else:
-                self.driver.execute_script(script,coordinate_x,coordinate_y)
-                time.sleep(2)
-                
+                self.driver.execute_script(script,coordinate_x,coordinate_y)                
                 action = ActionBuilder(self.driver)
                 action.pointer_action.move_to_location(coordinate_x,coordinate_y).click()
-                # action.pointer_action.move_to_location(coordinate_x,coordinate_y).context_click().pause(2).click()
                 action.perform()
         elif action == 'mouse_scroll':
             try:
@@ -202,12 +197,13 @@ class SeleniumApi():
 
     def main_action(self, action, find_method,find_value,input_value):
         """网页的所有操作"""
+        mouse_action = ['click','double_click','right_click','hover']
         
         if 'webpage' in action:
             self.webpage_action(action,input_value)
         elif action == 'sleep':
             time.sleep(float(input_value)) 
-        elif 'click' in action or action == 'hover':
+        elif action in mouse_action:
             element = self.find_element(find_method,find_value)
             self.mouse_action(element,action,input_value) 
         elif 'input' in action:
@@ -215,7 +211,7 @@ class SeleniumApi():
         elif 'mouse' in action:
             self.mouse_action_other(action,find_method,find_value,input_value)     
         else:
-            print('action is not defined')
+            print(f'暂不支持"{action}"操作')
         
     def __enter__(self):
         self.set_driver()

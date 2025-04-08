@@ -16,7 +16,7 @@
                     <el-cascader
                         v-model="webstep_form.action"
                         :options="webAutoTestStore.action"
-                        @change=""
+                        @change="clear_form"
                         :props="{ emitPath: false }"
                         style="width: 100%;"
                     />
@@ -51,9 +51,8 @@
                     </el-form-item>
                     <el-alert type="info" :closable="false">
                         <p>此操作会先计算坐标位置，最后对坐标位置进行点击。适合一些元素不好定位的场景。</p>
-                        <p>请注意，设置元素和不设置元素的坐标起点会不同。</p>
                         <li>如果不设置元素，会从视窗左上角（原点）进行偏移。</li>
-                        <li>如果设置元素,会将光标移动到元素中心点（原点），然后通过偏移量进行光标相对原点的偏移。</li>
+                        <li>如果设置元素,会从元素左上角进行偏移。</li>
                     </el-alert>
                 </div>
                 <div v-else-if="webstep_form.action=='mouse_scroll'">
@@ -229,6 +228,12 @@ const webstep_form = ref({
 });
 
 
+// 切换操作清理数据
+const clear_form = () => {
+    webstep_form.value.find_method = '';
+    webstep_form.value.find_value = '';
+    webstep_form.value.input_value = '';
+}
 
 // 添加步骤api
 const add_webstep = () => {
