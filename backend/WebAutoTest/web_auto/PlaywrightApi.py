@@ -15,7 +15,7 @@ class NoSuchElementException(Exception):
 
 
 class PlaywrightApi():
-    def __init__(self,browser: str="chrome",headless=False,window_size: str= None, *args, **kwargs) -> None:
+    def __init__(self,browser: str="chrome",headless=False,window_size: str= None, grid_url: str = None, *args, **kwargs) -> None:
         """_summary_
 
         Args:
@@ -32,6 +32,7 @@ class PlaywrightApi():
         self.browser_type = browser
         self.headless = headless
         self.window_size = window_size
+        self.grid_url = grid_url.strip('/') if grid_url else None
 
     def set_chrome_browser(self):
         self.playwright = sync_playwright().start()
@@ -61,7 +62,13 @@ class PlaywrightApi():
                 self.page = self.context.new_page()
        
     def set_browser(self):
+        
         if not self.browser:
+            if self.grid_url:
+                os.environ["SELENIUM_REMOTE_URL"] = self.grid_url
+            else:
+                os.environ.pop("SELENIUM_REMOTE_URL", None)
+            
             if self.browser_type == 'chrome':
                 self.set_chrome_browser()
             else:
@@ -96,14 +103,19 @@ class PlaywrightApi():
             element.clear()
             element.fill(input)
         elif action == 'keyboard_input':
-            if find_value:
+            if find_value and find_method:
                 element = self.find_element(find_method,find_value)
                 key = self.map_keys_attr(input)
                 if key:
                     element.press(key)
                 else:
                     print('key is not defined')
-                    element.press("")
+            else:
+                key = self.map_keys_attr(input)
+                if key:
+                    self.page.keyboard.press(key)
+                else:
+                    print('key is not defined')
     
     def mouse_action(self, element: Locator, action):
         """鼠标操作"""
@@ -143,7 +155,7 @@ class PlaywrightApi():
             }
             """
             
-            if find_value:
+            if find_value and find_method:
                 element = self.find_element(find_method,find_value)
                 bounding_box = element.bounding_box()
                 # 获取点击的左上点坐标
@@ -158,7 +170,7 @@ class PlaywrightApi():
                 self.page.mouse.click(coordinate_x,coordinate_y)
         elif action == 'mouse_scroll':
             delta_y = int(input)
-            if find_value:
+            if find_value and find_method:
                 element = self.find_element(find_method,find_value)
                 element.scroll_into_view_if_needed()
                 element.evaluate("window.scrollBy(0, arguments[0])", delta_y)

@@ -81,9 +81,10 @@ class SeleniumApi():
             element.clear()
             element.send_keys(input)
         elif action == 'keyboard_input':
-            if find_value:
+            if find_value and find_method:
                 element = self.find_element(find_method,find_value)
-                element.send_keys(input)
+                key_value = self.set_keys_attr(input)
+                element.send_keys(key_value)
             else:
                 key_value = self.set_keys_attr(input)
                 ActionChains(self.driver).send_keys(key_value).perform()
@@ -123,8 +124,7 @@ class SeleniumApi():
                 }, 2000);
             """
             
-            if find_value:
-                
+            if find_value and find_method:
                 element = self.find_element(find_method,find_value)
                 # 左上角偏移点击
                 left_top_x = element.location['x']
@@ -142,7 +142,7 @@ class SeleniumApi():
         elif action == 'mouse_scroll':
             try:
                 delta_y = int(input)
-                if find_value:
+                if find_value and find_method:
                     element = self.find_element(find_method,find_value)
                     ActionChains(self.driver).scroll_to_element(element=element).perform()
                     scroll_origin = ScrollOrigin.from_element(element)

@@ -110,6 +110,10 @@ export const useWebAutoTest = defineStore('webAutoTest', {
                 value: "find_element_by_name",
                 label: "by_name"
             },
+            {
+                value: "",
+                label: "空"
+            },
         ],
         brower: [
             {

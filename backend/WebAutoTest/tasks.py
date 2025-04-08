@@ -69,7 +69,7 @@ def task__start_case_pw(case_id: int, browser: str="chrome",headless=False,windo
     from .web_auto.PlaywrightApi import PlaywrightApi, NoSuchElementException
     from playwright.sync_api import TimeoutError
     
-    with PlaywrightApi(browser=browser,headless=headless,window_size=window_size) as api:
+    with PlaywrightApi(browser=browser,headless=headless,window_size=window_size,grid_url=grid_url) as api:
         for step in case_steps:
             try:
                 api.main_action(action=step['action'],
